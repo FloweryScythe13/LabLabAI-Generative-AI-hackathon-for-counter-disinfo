@@ -50,7 +50,7 @@ all_columns_df.reset_index(drop=True, inplace=True)
 
 prompt = "Repeat the Tweet, if necessary, translate it to English leaving all hashtags unchanged"
 
-api_key = "sk-xxx"
+api_key = os.environ["OPENAI_API_KEY"]
 set_openai_key(api_key)
 
 #Loop through dataframe

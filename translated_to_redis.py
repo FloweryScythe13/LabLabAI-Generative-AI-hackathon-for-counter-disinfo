@@ -81,9 +81,9 @@ all_columns_df[['is_quote_tweet', 'is_retweet']] = all_columns_df[['is_quote_twe
 # connect to define Redis connection parameters
 try:
     redis_conn = redis.Redis(
-    host='redis-14733.c233.eu-west-1-1.ec2.cloud.redislabs.com',
-    port=14733,
-    password='SGY0vbdLGFRtmNGylXGdAiwABVpLUY6Z')
+      host=os.environ["REDIS_HOST"],
+      port=os.environ["REDIS_PORT"],
+      password=os.environ["REDIS_PASSWORD"])
     print ('Connected to redis')
 except ValueError as e:
   raise ValueError(f"Your redis connected error: {e}")

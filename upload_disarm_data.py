@@ -16,9 +16,9 @@ import json
 def upload_disarm_data():
   try:
     client = redis.Redis(
-      host='redis-14733.c233.eu-west-1-1.ec2.cloud.redislabs.com',
-      port=14733,
-      password='SGY0vbdLGFRtmNGylXGdAiwABVpLUY6Z')
+      host=os.environ["REDIS_HOST"],
+      port=os.environ["REDIS_PORT"],
+      password=os.environ["REDIS_PASSWORD"])
   except ValueError as e:
     raise ValueError(f"Your redis connected error: {e}")
   

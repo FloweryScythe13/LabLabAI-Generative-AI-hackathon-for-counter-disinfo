@@ -19,9 +19,9 @@ class Disarm_GPT(object):
     embeddings = OpenAIEmbeddings()
     # Connect to redis instance
     self.redis_client = ArcBlokRedis(
-      host='redis-14733.c233.eu-west-1-1.ec2.cloud.redislabs.com',
-      port=14733,
-      password='SGY0vbdLGFRtmNGylXGdAiwABVpLUY6Z',
+      host=os.environ["REDIS_HOST"],
+      port=os.environ["REDIS_PORT"],
+      password=os.environ["REDIS_PASSWORD"],
       index_name='disarm',
       embedding_function=embeddings.embed_query)
 
@@ -62,37 +62,4 @@ Answer in Markdown:"""
     )
     return qa_chain
 
-  # Define function to query OpenAI API
-  # def query_gpt(prompt, model, vectors):
-  #   # Encode prompt with summary keywords and transform to vector
-  #   summary_keywords = extract_summary_keywords(prompt)
-  #   prompt_vector = model.encode([summary_keywords])
 
-  #   # Find most similar vector in DISARM
-  #   best_match_index = find_best_match(prompt_vector, vectors)
-
-  #   # Retrieve tweet and its corresponding content
-  #   key = f'tweet_{best_match_index}'
-  #   value = r.get(key)
-  #   tweet = value.decode()
-  #   content = extract_content(tweet)
-
-  #   # Query OpenAI GPT model with tweet and user input
-  #   query = f'Q: {content} \nA: {prompt}'
-  #   response = openai.Completion.create(engine="davinci",
-  #                                       prompt=query,
-  #                                       max_tokens=1024,
-  #                                       n=1,
-  #                                       stop=None,
-  #                                       temperature=0.7)
-
-  #   # Extract the response text from the API result and return it
-  #   response_text = response.choices[0].text.strip()
-  #   return response_text
-
-  # # Sample prompt for testing
-  # prompt = "What is the sentiment analysis of social media data related to a specific event?"
-  # # Query the OpenAI API with the prompt and return the response text
-  # response_text = query_gpt(prompt, model, vectors)
-  # # Print the response text
-  # print(response_text)
