@@ -13,28 +13,29 @@ import logger
 import numpy as np
 import json
 
+
 def upload_disarm_data():
   try:
-    client = redis.Redis(
-      host=os.environ["REDIS_HOST"],
-      port=os.environ["REDIS_PORT"],
-      password=os.environ["REDIS_PASSWORD"])
+    client = redis.Redis(host=os.environ["REDIS_HOST"],
+                         port=os.environ["REDIS_PORT"],
+                         password=os.environ["REDIS_PASSWORD"])
   except ValueError as e:
     raise ValueError(f"Your redis connected error: {e}")
-  
+  flush_result = client.flushall()
+  assert flush_result == True
   loader = CSVLoader(file_path='./merged_file.csv')
-  
+
   documents = loader.load()
   text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
   docs = text_splitter.split_documents(documents)
   docs = docs[0:400]
-  
+
   embedding = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
-  
+
   index_name = 'disarm'
   metadatas = None
   embeddings = embedding.embed_documents([x.page_content for x in docs])
-  
+
   dim = len(embeddings[0])
   # Constants
   vector_number = len(embeddings)  # initial number of vectors
@@ -58,7 +59,7 @@ def upload_disarm_data():
     },
   )
   fields = [content, metadata, content_embedding]
-  
+
   # Check if index exists
   try:
     client.ft(index_name).info()
@@ -69,7 +70,7 @@ def upload_disarm_data():
       fields=fields,
       definition=IndexDefinition(prefix=[prefix], index_type=IndexType.HASH),
     )
-  
+
     pipeline = client.pipeline()
     for i, text in enumerate(docs):
       key = f"{prefix}:{i}"
@@ -78,10 +79,12 @@ def upload_disarm_data():
         key,
         mapping={
           "content": text.page_content,
-          "content_vector": np.array(embeddings[i], dtype=np.float32).tobytes(),
+          "content_vector": np.array(embeddings[i],
+                                     dtype=np.float32).tobytes(),
           "metadata": json.dumps(metadata),
         },
       )
     pipeline.execute()
-print("Data Done")
 
+
+print("Data Done")

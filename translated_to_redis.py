@@ -5,6 +5,7 @@ from redis.commands.search.field import TextField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from sentence_transformers import SentenceTransformer
 import os
+import numpy as np
 
 
 

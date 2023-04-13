@@ -1,0 +1,3 @@
+*.cypython*.*
+*.pyc
+/__pychache__/*

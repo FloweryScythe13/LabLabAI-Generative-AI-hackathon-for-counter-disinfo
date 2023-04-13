@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import openai
-
+import os 
 #----------------------------------------------------------------------------------------------------------
 #-------------------------------------Functinos -------------------------------------------------
 
@@ -40,7 +40,7 @@ def gpt3_algorithm_v2(text, prompt):
 MAX_TEXT_LENGTH = 512
 NUMBER_TWEETS = 1000
 # load the product data and truncate long text fields
-all_columns_df = pd.read_csv("data/combineddatasets.csv", converters={'full_text': auto_truncate})
+all_columns_df = pd.read_csv("combineddatasets.csv", converters={'full_text': auto_truncate})
 all_columns_df['primary_key'] = all_columns_df['created_at'] + '-' + all_columns_df['full_text']
 all_columns_df['full_text'].replace('', np.nan, inplace=True)
 all_columns_df.dropna(subset=['full_text'], inplace=True)
